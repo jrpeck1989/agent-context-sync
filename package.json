@@ -1,6 +1,6 @@
 {
   "name": "agent-context-sync",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A comprehensive CLI tool and MCP server for synchronizing AI agent documentation using a partials-to-templates architecture",
   "main": "dist/index.js",
   "bin": {

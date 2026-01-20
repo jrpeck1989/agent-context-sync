@@ -4,6 +4,7 @@ import * as yaml from "js-yaml";
 import { spawn, ChildProcess } from "child_process";
 import { runBuild } from "./builder";
 import { z } from "zod";
+import { getProjectRoot } from "./config";
 
 // Simplified schema for tools - we only need the directory paths
 const ToolsConfigSchema = z.object({
@@ -16,7 +17,7 @@ let watcherProcess: ChildProcess | null = null;
 
 // Function to get config paths
 function getConfigPaths(): { partialsDir: string; templatesDir: string } {
-  const rootDir = process.cwd();
+  const rootDir = getProjectRoot();
   const configPath = path.join(rootDir, ".agent-instructions.yaml");
 
   if (!fs.existsSync(configPath)) {
@@ -248,7 +249,7 @@ export const toolImplementations: ToolImplementations = {
       } else {
         // Use ts-node for development
         const tsNodePath = path.resolve(
-          process.cwd(),
+          getProjectRoot(),
           "node_modules/.bin/ts-node"
         );
         const srcScriptPath = path.resolve(__dirname, "../index.ts");

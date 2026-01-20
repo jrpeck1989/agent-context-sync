@@ -35,6 +35,7 @@ program.command('watch')
 program.command('serve')
   .description('Start the interactive MCP server')
   .option('--stdio', 'Use stdio for communication instead of HTTP')
+  .option('--project-dir <path>', 'Path to the project directory (defaults to current directory)')
   .action(serveCommand);
 
 program.command('validate')

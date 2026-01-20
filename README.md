@@ -122,45 +122,92 @@ To use this MCP server with Cursor IDE, add the following configuration to your 
 2. Search for "MCP" or navigate to Extensions > MCP
 3. Add a new MCP server configuration:
 
+**Option 1: Using environment variable (Recommended)**
 ```json
 {
   "mcpServers": {
     "agent-context-sync": {
       "command": "agent-context-sync",
       "args": ["serve", "--stdio"],
-      "cwd": "/path/to/your/project"
+      "env": {
+        "AGENT_CONTEXT_PROJECT_DIR": "/absolute/path/to/your/project"
+      }
     }
   }
 }
 ```
 
-### Adding to Claude Code
-
-To use this MCP server with Claude Code, run the following command in your project directory:
-
-```bash
-claude-code add-mcp-server agent-context-sync --command "agent-context-sync" --args "serve --stdio"
+**Option 2: Using CLI option**
+```json
+{
+  "mcpServers": {
+    "agent-context-sync": {
+      "command": "agent-context-sync",
+      "args": ["serve", "--stdio", "--project-dir", "/absolute/path/to/your/project"]
+    }
+  }
+}
 ```
 
-Or manually add the configuration to your Claude Code settings:
+**Note:** Replace `/absolute/path/to/your/project` with the actual path to your project directory containing `.agent-instructions.yaml`.
 
+### Adding to Claude Desktop
+
+To use this MCP server with Claude Desktop, add the following configuration to your Claude settings file:
+
+**macOS**: `~/Library/Application Support/Claude/claude_desktop_config.json`  
+**Windows**: `%APPDATA%\Claude\claude_desktop_config.json`
+
+**Option 1: Using environment variable (Recommended)**
 ```json
 {
   "mcpServers": {
     "agent-context-sync": {
       "command": "agent-context-sync",
       "args": ["serve", "--stdio"],
-      "cwd": "/path/to/your/project"
+      "env": {
+        "AGENT_CONTEXT_PROJECT_DIR": "/absolute/path/to/your/project"
+      }
     }
   }
 }
 ```
+
+**Option 2: Using CLI option**
+```json
+{
+  "mcpServers": {
+    "agent-context-sync": {
+      "command": "agent-context-sync",
+      "args": ["serve", "--stdio", "--project-dir", "/absolute/path/to/your/project"]
+    }
+  }
+}
+```
+
+**Note:** Replace `/absolute/path/to/your/project` with the actual path to your project directory containing `.agent-instructions.yaml`.
 
 ### Adding to Other MCP Clients
 
 For any MCP-compatible client, you can:
 - **Stdio Mode**: Use `agent-context-sync serve --stdio` for direct integration
 - **HTTP Mode**: Use `agent-context-sync serve` and connect to `http://localhost:3000/mcp`
+
+### Troubleshooting: Project Directory Resolution
+
+The MCP server needs to know which project directory to use. It determines this using the following priority order:
+
+1. **`AGENT_CONTEXT_PROJECT_DIR` environment variable** (highest priority) - Set this in your MCP client configuration
+2. **`--project-dir` CLI option** - Pass this as an argument when starting the server
+3. **Current working directory** - Falls back to the directory from which the server was started
+
+**Common Issue:** If you see errors like "file not found" or the server looks in your home directory, it means the project directory isn't being set correctly. Use one of the configuration options above to explicitly set your project path.
+
+**Example Error Messages:**
+- `.agent-instructions.yaml not found` - The server is looking in the wrong directory
+- `Unable to determine project root directory` - No valid project configuration was found
+
+**Solution:** Always use the `env.AGENT_CONTEXT_PROJECT_DIR` setting in your MCP client configuration to ensure the server knows where your project is located.
 
 ## MCP Server & Tools
 

@@ -3,6 +3,7 @@ import * as path from "path";
 import * as yaml from "js-yaml";
 import * as mustache from "mustache";
 import { z } from "zod";
+import { getProjectRoot } from "./config";
 
 // Zod schema for validation
 const AgentOutputSchema = z.object({
@@ -34,7 +35,7 @@ type BuildOutput = {
 };
 
 async function getBuildConfig() {
-  const rootDir = process.cwd();
+  const rootDir = getProjectRoot();
   const configPath = path.join(rootDir, ".agent-instructions.yaml");
 
   if (!fs.existsSync(configPath)) {
@@ -49,7 +50,7 @@ async function getBuildConfig() {
 
 export async function getBuildOutput(): Promise<BuildOutput[]> {
   const validatedConfig = await getBuildConfig();
-  const rootDir = process.cwd();
+  const rootDir = getProjectRoot();
   const partialsDir = path.join(rootDir, validatedConfig.partialsDir);
   const templatesDir = path.join(rootDir, validatedConfig.templatesDir);
 
@@ -87,7 +88,7 @@ export async function getBuildOutput(): Promise<BuildOutput[]> {
 
 export async function runBuild() {
   const buildOutputs = await getBuildOutput();
-  const rootDir = process.cwd();
+  const rootDir = getProjectRoot();
 
   for (const output of buildOutputs) {
     let outFilePath: string;

@@ -1,11 +1,12 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import { getBuildOutput } from '../core/builder';
+import { getProjectRoot } from '../core/config';
 
 export async function validateCommand() {
   console.error('Validating generated files...');
   const buildOutputs = await getBuildOutput();
-  const rootDir = process.cwd();
+  const rootDir = getProjectRoot();
   let allFilesValid = true;
 
   for (const output of buildOutputs) {

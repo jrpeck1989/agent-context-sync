@@ -3,6 +3,7 @@ import * as path from 'path';
 import * as yaml from 'js-yaml';
 import * as fs from 'fs';
 import { runBuild } from '../core/builder';
+import { getProjectRoot } from '../core/config';
 
 // A simple debounce function
 function debounce(func: () => void, wait: number) {
@@ -18,7 +19,7 @@ function debounce(func: () => void, wait: number) {
 }
 
 export function watchCommand() {
-  const rootDir = process.cwd();
+  const rootDir = getProjectRoot();
   const configPath = path.join(rootDir, '.agent-instructions.yaml');
 
   if (!fs.existsSync(configPath)) {
